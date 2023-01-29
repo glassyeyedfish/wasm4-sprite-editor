@@ -60,12 +60,51 @@
         let spriteW = 4
         let spriteH = 3
 
-        // Dragging the canvas
+        // Dragging/scaling the canvas
+        let isDragging = false
+        let preDragX = 0
+        let preDragY = 0
+        let preDragSpriteX = 0
+        let preDragSpriteY = 0
+        let deltaDragX = 0
+        let deltaDragY = 0
+
         canvas.addEventListener("mousemove", canvasMouseMoveHandler)
-        function canvasMouseMoveHandler() { console.log(1) }
+        function canvasMouseMoveHandler(e) {
+            if (isDragging) {
+                deltaDragX = preDragX - e.clientX
+                deltaDragY = preDragY - e.clientY
+                spriteX = preDragSpriteX - deltaDragX
+                spriteY = preDragSpriteY - deltaDragY
+            }
+            render(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop)
+        }
+
+        canvas.addEventListener("mousedown", canvasMouseDownHandler)
+        function canvasMouseDownHandler(e) {
+            isDragging = true
+            preDragX = e.clientX
+            preDragY = e.clientY
+            preDragSpriteX = spriteX
+            preDragSpriteY = spriteY
+        }
+
+        canvas.addEventListener("mouseup", canvasMouseUpHandler)
+        function canvasMouseUpHandler() { isDragging = false }
+
+        canvas.addEventListener("mouseleave", canvasMouseLeaveHandler)
+        function canvasMouseLeaveHandler() { isDragging = false }
+
+        canvas.addEventListener("wheel", canvasWheelHandler)
+        function canvasWheelHandler(e) {
+            pixelSize -= 0.1 * e.deltaY
+            if (pixelSize < 3) { pixelSize = 3 }
+            if (pixelSize > 200) { pixelSize = 200 }
+            render(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop)
+        }
 
         // Draw on the canvas
-        function render() {
+        function render(mouseX, mouseY) {
             // background
             ctx.fillStyle = "#222222"
             ctx.fillRect(0, 0, CANVAS_W, CANVAS_H)
@@ -74,12 +113,14 @@
             for (let x = 0; x < spriteW; x++) {
                 for (let y = 0; y < spriteH; y++) {
 
+                    // Set the color of the pixel
                     if ((x + y) % 2 == 0) {
                         ctx.fillStyle = "#333333"
                     } else {
                         ctx.fillStyle = "#444444"
                     }
 
+                    // Draw the pixel
                     ctx.fillRect(
                         (pixelSize * x) + spriteX,
                         (pixelSize * y) + spriteY,
@@ -87,12 +128,28 @@
                         pixelSize
                     )
 
+                    // Draw a box around the pixel if the mouse if over it
+                    if (
+                        (pixelSize * x) + spriteX < mouseX 
+                        && mouseX < (pixelSize * (x + 1)) + spriteX
+                        && (pixelSize * y) + spriteY < mouseY 
+                        && mouseY < (pixelSize * (y + 1)) + spriteY
+                    ) {
+                        ctx.strokeStyle = "#ffffff"
+                        ctx.strokeRect(
+                            (pixelSize * x) + spriteX,
+                            (pixelSize * y) + spriteY,
+                            pixelSize,
+                            pixelSize
+                        )
+                    }
+
                 }
             }
         }
 
         // Initialize canvas
-        render()
+        render(0, 0)
     </script>
 
 </body>
