@@ -1,9 +1,82 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-  </head>
-  <body>
-    <p>Hello, world!</p>
-  </body>
+<html lang='en'>
+
+<head>
+
+<title>WASM-4 Sprite Editor</title>
+<meta charset="UTF-8">
+
+<style>
+body {
+  background-color: #111111;
+  color: #dddddd;
+
+  line-height: 1.6;
+  font-family: sans-serif;
+
+  padding: 1em;
+  max-width: 42em;
+  margin: auto;
+}
+
+a, .pr {
+  color: #ae81ff;
+}
+
+a:hover {
+  color: #8160be;
+}
+
+pre {
+  padding: 1em;
+  background-color: #333333;
+}
+</style>
+
+</head>
+
+<body>
+
+  <h1>WASM-4 Sprite Editor</h1>
+
+  <center><canvas id="drawing-area">
+    Please use a browser that supports HTML5 canvas. Try: https://www.mozilla.org/firefox/
+  </canvas></center>
+
+  <script>
+    // Setup canvas and graphics context
+    let canvasWidth = 300
+    let canvasHeight = 300
+    let canvas = document.getElementById("drawing-area")
+    canvas.setAttribute("width", canvasWidth)
+    canvas.setAttribute("height", canvasHeight)
+
+    let ctx = canvas.getContext("2d")
+    ctx.fillStyle = "#FF0000"
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+
+    // Sprite data
+    let spriteWidth = 2
+    let spriteHeight = 2
+
+    // Track mouse position relative to the canvas
+    let mouseX = 0
+    let mouseY = 0
+
+    document.addEventListener("mousemove", mouseMoveHandler)
+    function mouseMoveHandler(e) {
+      mouseX = e.clientX - canvas.offsetLeft
+      mouseY = e.clientY - canvas.offsetTop
+    }
+
+    // Handle clicking the canvas
+    canvas.addEventListener("click", canvasClickHandler)
+    function canvasClickHandler() {
+      console.log(mouseX * spriteWidth / canvasWidth)
+    }
+  </script>
+
+</body>
+
 </html>
