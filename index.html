@@ -4,78 +4,96 @@
 
 <head>
 
-<title>WASM-4 Sprite Editor</title>
-<meta charset="UTF-8">
+    <title>WASM-4 Sprite Editor</title>
+    <meta charset="UTF-8">
 
-<style>
-body {
-  background-color: #111111;
-  color: #dddddd;
+    <style>
+    body {
+        background-color: #111111;
+        color: #dddddd;
 
-  line-height: 1.6;
-  font-family: sans-serif;
+        line-height: 1.6;
+        font-family: sans-serif;
 
-  padding: 1em;
-  max-width: 42em;
-  margin: auto;
-}
+        padding: 0px;
+        width: 800px;
+        margin: auto;
+    }
 
-a, .pr {
-  color: #ae81ff;
-}
+    a, .pr {
+        color: #ae81ff;
+    }
 
-a:hover {
-  color: #8160be;
-}
-
-pre {
-  padding: 1em;
-  background-color: #333333;
-}
-</style>
+    a:hover {
+        color: #8160be;
+    }
+    </style>
 
 </head>
 
 <body>
 
-  <h1>WASM-4 Sprite Editor</h1>
+    <h1>WASM-4 Sprite Editor</h1>
 
-  <center><canvas id="drawing-area">
-    Please use a browser that supports HTML5 canvas. Try: https://www.mozilla.org/firefox/
-  </canvas></center>
+    <center><canvas id="drawingArea">
+        Please use a browser that supports HTML5 canvas. 
+        Try: https://www.mozilla.org/firefox/
+    </canvas></center>
 
-  <script>
-    // Setup canvas and graphics context
-    let canvasWidth = 300
-    let canvasHeight = 300
-    let canvas = document.getElementById("drawing-area")
-    canvas.setAttribute("width", canvasWidth)
-    canvas.setAttribute("height", canvasHeight)
+    <script>
+        // Constants
+        const CANVAS_W = 800
+        const CANVAS_H = 600
 
-    let ctx = canvas.getContext("2d")
-    ctx.fillStyle = "#FF0000"
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+        // Set up the canvas
+        let canvas = document.getElementById("drawingArea")
+        canvas.setAttribute("width", CANVAS_W)
+        canvas.setAttribute("height", CANVAS_H)
 
-    // Sprite data
-    let spriteWidth = 2
-    let spriteHeight = 2
+        // Set up the graphics context
+        let ctx = canvas.getContext("2d")
 
-    // Track mouse position relative to the canvas
-    let mouseX = 0
-    let mouseY = 0
+        // Sprite data
+        let pixelSize = 30
+        let spriteX = 100
+        let spriteY = 100
+        let spriteW = 4
+        let spriteH = 3
 
-    document.addEventListener("mousemove", mouseMoveHandler)
-    function mouseMoveHandler(e) {
-      mouseX = e.clientX - canvas.offsetLeft
-      mouseY = e.clientY - canvas.offsetTop
-    }
+        // Dragging the canvas
+        canvas.addEventListener("mousemove", canvasMouseMoveHandler)
+        function canvasMouseMoveHandler() { console.log(1) }
 
-    // Handle clicking the canvas
-    canvas.addEventListener("click", canvasClickHandler)
-    function canvasClickHandler() {
-      console.log(mouseX * spriteWidth / canvasWidth)
-    }
-  </script>
+        // Draw on the canvas
+        function render() {
+            // background
+            ctx.fillStyle = "#222222"
+            ctx.fillRect(0, 0, CANVAS_W, CANVAS_H)
+
+            // sprite
+            for (let x = 0; x < spriteW; x++) {
+                for (let y = 0; y < spriteH; y++) {
+
+                    if ((x + y) % 2 == 0) {
+                        ctx.fillStyle = "#333333"
+                    } else {
+                        ctx.fillStyle = "#444444"
+                    }
+
+                    ctx.fillRect(
+                        (pixelSize * x) + spriteX,
+                        (pixelSize * y) + spriteY,
+                        pixelSize,
+                        pixelSize
+                    )
+
+                }
+            }
+        }
+
+        // Initialize canvas
+        render()
+    </script>
 
 </body>
 
